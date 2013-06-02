@@ -1,2 +1,5 @@
 *src/
 *pkg/
+
+*.[xgb]z
+*.bz2
