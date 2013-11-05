@@ -8,7 +8,7 @@ arch=('i686' 'x86_64')
 url="http://mspgcc4.sourceforge.net/"
 license=('custom')
 depends=('gcc-msp430')
-options=(!strip)
+options=(!strip staticlibs) 
 
 _mspgcc_ver=20120406
 _sf_base="http://sourceforge.net/projects/mspgcc/files"

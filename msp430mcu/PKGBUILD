@@ -8,7 +8,7 @@ arch=(any)
 url="http://mspgcc4.sourceforge.net/"
 license=('GPL')
 makedepends=('python2')
-options=(!strip)
+options=(!strip staticlibs)
 
 _mspgcc_ver=${pkgver}
 _gnu_mirror="http://ftpmirror.gnu.org"

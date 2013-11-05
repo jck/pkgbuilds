@@ -9,7 +9,7 @@ url="http://sourceforge.net/projects/mspgcc/"
 license=('GPL')
 makedepends=('gcc46' 'binutils-msp430')
 depends=('elfutils' 'libmpc')
-options=(!strip !emptydirs !libtool)
+options=(!strip !emptydirs !libtool staticlibs)
 
 _mspgcc_ver=20120406
 _gnu_mirror="http://ftpmirror.gnu.org"
