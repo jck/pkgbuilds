@@ -8,7 +8,7 @@ arch=('i686' 'x86_64')
 url="http://sourceforge.net/projects/mspgcc/"
 license=('GPL')
 depends=('zlib')
-options=('!libtool' '!distcc' '!ccache')
+options=('!libtool' '!distcc' '!ccache' staticlibs) 
 
 _binutils_ver=2.21.1a
 _gnu_mirror="http://ftpmirror.gnu.org"

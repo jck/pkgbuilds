@@ -16,7 +16,7 @@ provides=('gcc-4.6')
 depends=('glibc' 'binutils' 'gmp' 'mpfr' 'libmpc' 'ppl' 'isl' 'cloog' 'elfutils')
 makedepends=('flex' 'bison' 'aria2')
 # makedepends=('flex' 'bison' 'aria2' 'dejagnu') # For test
-options=('!libtool' '!emptydirs')
+options=('!libtool' '!emptydirs' staticlibs)
 
 _mirror="ftp://ftp.lip6.fr/pub/gcc"
 source=(gcc-hash-style-both.patch
