@@ -1,0 +1,217 @@
+diff -up vte-0.34.9/src/caps.c.oud vte-0.34.9/src/caps.c
+--- vte-0.34.9/src/caps.c.oud	2013-10-03 14:36:17.000000000 +0200
++++ vte-0.34.9/src/caps.c	2013-12-20 11:27:53.153383192 +0100
+@@ -495,6 +495,7 @@ struct _vte_capability_string _vte_xterm
+ 	{CSI "?%dn", "dec-device-status-report", 0},
+ 	{CSI "!p", "soft-reset", 0},
+ 	{CSI "%d;%d\"p", "set-conformance-level", 0},
++	{CSI "%d q", "set-cursor-style", 0}, /* DECSCUSR */
+ 	{CSI "%d\"q", "select-character-protection", 0},
+ 
+ 	{CSI "r", "set-scrolling-region", 0},
+diff -up vte-0.34.9/src/vte-private.h.oud vte-0.34.9/src/vte-private.h
+--- vte-0.34.9/src/vte-private.h.oud	2013-10-03 14:36:17.000000000 +0200
++++ vte-0.34.9/src/vte-private.h	2013-12-20 11:27:53.162383202 +0100
+@@ -147,6 +147,16 @@ typedef struct _VteVisualPosition {
+ 	long row, col;
+ } VteVisualPosition;
+ 
++typedef enum _VteCursorStyle {
++	VTE_CURSOR_STYLE_TERMINAL_DEFAULT,
++	VTE_CURSOR_STYLE_BLINK_BLOCK,
++	VTE_CURSOR_STYLE_STEADY_BLOCK,
++	VTE_CURSOR_STYLE_BLINK_UNDERLINE,
++	VTE_CURSOR_STYLE_STEADY_UNDERLINE,
++	VTE_CURSOR_STYLE_BLINK_IBEAM,
++	VTE_CURSOR_STYLE_STEADY_IBEAM
++} VteCursorStyle;
++
+ /* Terminal private data. */
+ struct _VteTerminalPrivate {
+ 	/* Emulation setup data. */
+@@ -287,6 +297,9 @@ struct _VteTerminalPrivate {
+ 	gboolean alternate_screen_scroll;
+ 	long scrollback_lines;
+ 
++	/* DECSCUSR cursor style */
++	VteCursorStyle cursor_style;
++
+ 	/* Cursor shape */
+ 	VteTerminalCursorShape cursor_shape;
+         float cursor_aspect_ratio;
+@@ -453,6 +466,10 @@ VteRowData *_vte_terminal_ring_insert (V
+ VteRowData *_vte_terminal_ring_append (VteTerminal *terminal, gboolean fill);
+ void _vte_terminal_ring_remove (VteTerminal *terminal, glong position);
+ 
++void vte_terminal_set_cursor_blinks_internal(VteTerminal *terminal, gboolean blink);
++void _vte_invalidate_cursor_once(VteTerminal *terminal, gboolean periodic);
++VteTerminalCursorBlinkMode _vte_terminal_decscusr_cursor_blink(VteTerminal *terminal);
++
+ /* vteseq.c: */
+ void _vte_terminal_handle_sequence(VteTerminal *terminal,
+ 				   const char *match_s,
+diff -up vte-0.34.9/src/vte.c.oud vte-0.34.9/src/vte.c
+--- vte-0.34.9/src/vte.c.oud	2013-12-20 11:27:53.149383188 +0100
++++ vte-0.34.9/src/vte.c	2013-12-20 11:27:53.162383202 +0100
+@@ -140,7 +140,7 @@ static void vte_terminal_add_process_tim
+ static void add_update_timeout (VteTerminal *terminal);
+ static void remove_update_timeout (VteTerminal *terminal);
+ static void reset_update_regions (VteTerminal *terminal);
+-static void vte_terminal_set_cursor_blinks_internal(VteTerminal *terminal, gboolean blink);
++static VteTerminalCursorShape _vte_terminal_decscusr_cursor_shape(VteTerminal *terminal);
+ static void vte_terminal_set_font_full_internal(VteTerminal *terminal,
+                                                 const PangoFontDescription *font_desc,
+                                                 VteTerminalAntiAlias antialias);
+@@ -8533,6 +8533,9 @@ vte_terminal_init(VteTerminal *terminal)
+ 	pvt->nrc_mode = TRUE;
+ 	vte_terminal_set_default_tabstops(terminal);
+ 
++	/* DECSCUSR cursor style */
++	pvt->cursor_style = VTE_CURSOR_STYLE_TERMINAL_DEFAULT;
++
+ 	/* Cursor shape. */
+ 	pvt->cursor_shape = VTE_CURSOR_SHAPE_BLOCK;
+         pvt->cursor_aspect_ratio = 0.04;
+@@ -11006,7 +11009,7 @@ vte_terminal_paint_cursor(VteTerminal *t
+ 	x = item.x;
+ 	y = item.y;
+ 
+-	switch (terminal->pvt->cursor_shape) {
++	switch (_vte_terminal_decscusr_cursor_shape(terminal)) {
+ 
+ 		case VTE_CURSOR_SHAPE_IBEAM: {
+                         int stem_width;
+@@ -13676,7 +13679,7 @@ vte_terminal_get_using_xft(VteTerminal *
+ 	return TRUE;
+ }
+ 
+-static void
++void
+ vte_terminal_set_cursor_blinks_internal(VteTerminal *terminal, gboolean blink)
+ {
+         VteTerminalPrivate *pvt = terminal->pvt;
+@@ -13728,7 +13731,7 @@ vte_terminal_set_cursor_blink_mode(VteTe
+ 
+         pvt->cursor_blink_mode = mode;
+ 
+-        switch (mode) {
++        switch (_vte_terminal_decscusr_cursor_blink(terminal)) {
+           case VTE_CURSOR_BLINK_SYSTEM:
+             g_object_get(gtk_widget_get_settings(GTK_WIDGET(terminal)),
+                                                  "gtk-cursor-blink", &blinks,
+@@ -13809,6 +13812,63 @@ vte_terminal_get_cursor_shape(VteTermina
+         return terminal->pvt->cursor_shape;
+ }
+ 
++/** 
++ * _vte_terminal_decscusr_cursor_blink:
++ * @terminal: a #VteTerminal
++ *
++ * Returns the cursor blink mode set by DECSCUSR. If DECSCUSR was never
++ * called, or it set the blink mode to terminal default, this returns the
++ * currently set cursor blink mode. Internal use only.
++ *
++ * Return value: cursor blink mode
++ */
++VteTerminalCursorBlinkMode
++_vte_terminal_decscusr_cursor_blink(VteTerminal *terminal)
++{
++	switch (terminal->pvt->cursor_style) {
++	default:
++	case VTE_CURSOR_STYLE_TERMINAL_DEFAULT:
++		return terminal->pvt->cursor_blink_mode;
++	case VTE_CURSOR_STYLE_BLINK_BLOCK:
++	case VTE_CURSOR_STYLE_BLINK_UNDERLINE:
++	case VTE_CURSOR_STYLE_BLINK_IBEAM:
++		return VTE_CURSOR_BLINK_ON;
++	case VTE_CURSOR_STYLE_STEADY_BLOCK:
++	case VTE_CURSOR_STYLE_STEADY_UNDERLINE:
++	case VTE_CURSOR_STYLE_STEADY_IBEAM:
++		return VTE_CURSOR_BLINK_OFF;
++	}
++}
++
++/** 
++ * _vte_terminal_decscusr_cursor_shape:
++ * @terminal: a #VteTerminal
++ *
++ * Returns the cursor shape set by DECSCUSR. If DECSCUSR was never called,
++ * or it set the cursor shape to terminal default, this returns the currently
++ * set cursor shape. Internal use only.
++ *
++ * Return value: cursor shape
++ */
++static VteTerminalCursorShape
++_vte_terminal_decscusr_cursor_shape(VteTerminal *terminal)
++{
++	switch (terminal->pvt->cursor_style) {
++	default:
++	case VTE_CURSOR_STYLE_TERMINAL_DEFAULT:
++		return terminal->pvt->cursor_shape;
++	case VTE_CURSOR_STYLE_BLINK_BLOCK:
++	case VTE_CURSOR_STYLE_STEADY_BLOCK:
++		return VTE_CURSOR_SHAPE_BLOCK;
++	case VTE_CURSOR_STYLE_BLINK_UNDERLINE:
++	case VTE_CURSOR_STYLE_STEADY_UNDERLINE:
++		return VTE_CURSOR_SHAPE_UNDERLINE;
++	case VTE_CURSOR_STYLE_BLINK_IBEAM:
++	case VTE_CURSOR_STYLE_STEADY_IBEAM:
++		return VTE_CURSOR_SHAPE_IBEAM;
++	}
++}
++
+ /**
+  * vte_terminal_set_scrollback_lines:
+  * @terminal: a #VteTerminal
+diff -up vte-0.34.9/src/vteseq.c.oud vte-0.34.9/src/vteseq.c
+--- vte-0.34.9/src/vteseq.c.oud	2013-10-03 14:36:17.000000000 +0200
++++ vte-0.34.9/src/vteseq.c	2013-12-20 11:27:53.164383205 +0100
+@@ -3177,6 +3177,48 @@ vte_sequence_handler_screen_alignment_te
+ 	terminal->pvt->text_modified_flag = TRUE;
+ }
+ 
++/* DECSCUSR set cursor style */
++static void
++vte_sequence_handler_set_cursor_style (VteTerminal *terminal, GValueArray *params)
++{
++	GValue *value;
++	long style;
++	gboolean blinks;
++
++	if ((params == NULL) || (params->n_values != 1)) {
++		return;
++	}
++	value = g_value_array_get_nth(params, 0);
++	if (!G_VALUE_HOLDS_LONG(value)) {
++		return;
++	}
++	style = g_value_get_long(value);
++
++	if (style == terminal->pvt->cursor_style)
++		return;
++
++	terminal->pvt->cursor_style = style;
++
++	/* update cursor blink to match the DECSCUSR style */
++	switch (_vte_terminal_decscusr_cursor_blink(terminal)) {
++	case VTE_CURSOR_BLINK_SYSTEM:
++		g_object_get(gtk_widget_get_settings(GTK_WIDGET(terminal)),
++	                                             "gtk-cursor-blink",
++						     &blinks, NULL);
++		break;
++	case VTE_CURSOR_BLINK_ON:
++		blinks = TRUE;
++		break;
++	case VTE_CURSOR_BLINK_OFF:
++		blinks = FALSE;
++		break;
++	}
++	vte_terminal_set_cursor_blinks_internal(terminal, blinks);
++
++	/* and this will also make cursor shape match the DECSCUSR style */
++	_vte_invalidate_cursor_once(terminal, FALSE);
++}
++
+ /* Perform a soft reset. */
+ static void
+ vte_sequence_handler_soft_reset (VteTerminal *terminal, GValueArray *params)
