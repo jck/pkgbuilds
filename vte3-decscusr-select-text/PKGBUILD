@@ -9,11 +9,11 @@ arch=('i686' 'x86_64')
 license=('LGPL')
 options=('!libtool' '!emptydirs')
 depends=('gtk3' 'vte-common')
-makedepends=('intltool' 'gobject-introspection' 'gtk3')
+makedepends=('intltool' 'gobject-introspection' 'gtk3' 'gperf')
 url="http://www.gnome.org"
 source=(http://download.gnome.org/sources/vte/${pkgver::4}/vte-$pkgver.tar.xz
         expose_select_text.patch
-        decscusr.patch)
+        decscusr.patch::https://bugzilla.gnome.org/attachment.cgi?id=266650)
 sha256sums=('67b97178dfccb9c6e52325dec4757d207b65640ae7ed2a7dfacc4b47d8964c39'
             '37fc0ecd4939c3b14f36dace31b54507e0f1cf1fc95a07ae079b1997d0481d7e'
             '3f1763e7f7fbfae234cf3b8a01252332d11538c7b44b5fcf90aaf31ef158a3f7')
