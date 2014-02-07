@@ -1,0 +1,51 @@
+#Contributor: Keerthan Jaic <jckeerthan at gmail dt com>
+
+_target=msp430-elf
+
+pkgname=${_target}-binutils
+pkgver=2.24
+pkgrel=1
+pkgdesc="A set of programs to assemble and manipulate binary and object files for the MSP430 architecture"
+arch=('i686' 'x86_64')
+url="http://www.gnu.org/software/binutils/"
+license=('GPL')
+groups=('msp430-elf-toolchain')
+depends=('glibc>=2.17' 'zlib' 'binutils')
+options=('staticlibs' '!distcc' '!ccache')
+source=(ftp://ftp.gnu.org/gnu/binutils/binutils-${pkgver}.tar.bz2)
+md5sums=('e0f71a7b2ddab0f8612336ac81d9636b')
+
+prepare() {
+  cd ${srcdir}/binutils-${pkgver}
+
+  # From official binutils PKGBUILD
+  # hack! - libiberty configure tests for header files using "$CPP $CPPFLAGS"
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
+}
+
+build() {
+  mkdir -p {srcdir}/binutils-build
+  cd ${srcdir}/binutils-build
+
+  "${srcdir}/binutils-${pkgver}/configure" --prefix=/usr \
+    --target=${_target} \
+    --disable-multilib \
+    --disable-nls
+
+  # check the host environment and makes sure all the necessary tools are available
+  make configure-host
+
+  make tooldir=/usr
+
+}
+
+package() {
+  cd ${srcdir}/binutils-build
+  make DESTDIR=${pkgdir} tooldir=/usr install
+
+  #Duplicates
+  rm -f ${pkgdir}/usr/bin/{ar,as,nm,objcopy,objdump,ranlib,strip}
+
+  #These are included in the binutils package
+  rm -rf ${pkgdir}/usr/share/info
+}
