@@ -10,7 +10,7 @@ arch=('i686' 'x86_64')
 url="http://www.altera.com/products/software/quartus-ii/"
 license=('GPL')
 
-_alteradir="/opt/altera"
+_alteradir="/opt/altera/13.1"
 
 #In case you are using quartus ii subscription edition
 _alteralicense="${_alteradir}/License.dat"
