@@ -4,7 +4,14 @@ post_upgrade() {
   #If updating from 4.8.4-3 or older, inform the user about the changes to
   #configfile and stats file
   if [ $(vercmp $2 4.8.4-4) -lt 0 ]; then
-    echo 'Brainworkshop Warning:'
-    #todo
+    echo '-----------------Brainworkshop Warning-------------------------------'
+    echo 'This package no longer uses custom paths for config and stats'
+    echo 'The default config file is stored in ~/.brainworkshop/data/config.ini'
+    echo 'The default stats file is stored in ~/.brainworkshop/data/stats.txt'
+    echo ''
+    echo 'If you would like to migrate your existing data, run:'
+    echo 'mkdir -p ~/.brainworkshop/data'
+    echo 'mv ~/.brainworkshop.ini ~/.brainworkshop/data/config.ini'
+    echo 'mv ~/.brainworkshop.stats ~/.brainworkshop/data/stats.txt'
   fi
 }
