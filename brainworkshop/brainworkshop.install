@@ -1,0 +1,10 @@
+## arg 1:  the new package version
+## arg 2:  the old package version
+post_upgrade() {
+  #If updating from 4.8.4-3 or older, inform the user about the changes to
+  #configfile and stats file
+  if [ $(vercmp $2 4.8.4-4) -lt 0 ]; then
+    echo 'Brainworkshop Warning:'
+    #todo
+  fi
+}
