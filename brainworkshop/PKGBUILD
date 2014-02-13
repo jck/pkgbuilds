@@ -1,7 +1,7 @@
 # Contributor: Keerthan Jaic <jckeerthan at gmail dot com>
 pkgname=brainworkshop
 pkgver=4.8.4
-pkgrel=3
+pkgrel=4
 pkgdesc="Brain Workshop is a free open-source version of the Dual N-Back mental exercise"
 arch=('any')
 url="http://brainworkshop.sourceforge.net/"
