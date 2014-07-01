@@ -30,7 +30,8 @@ build() {
   "${srcdir}/binutils-${pkgver}/configure" --prefix=/usr \
     --target=${_target} \
     --disable-multilib \
-    --disable-nls
+    --disable-nls \
+    --disable-werror
 
   # check the host environment and makes sure all the necessary tools are available
   make configure-host
