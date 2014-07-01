@@ -3,37 +3,47 @@
 # NOTE: To build this package you need to place the Altera Quartus installer into your startdir.
 #       If you plan on using the usbblaster make sure you are member of the plugdev group.
 pkgname=quartus-integration
-pkgver=1
+pkgver=2
 pkgrel=1
 pkgdesc="Quartus II system integration files for archlinux"
 arch=('i686' 'x86_64')
 url="http://www.altera.com/products/software/quartus-ii/"
 license=('GPL')
 
-_alteradir="/opt/altera/13.1"
+_quartusver="14.0"
+_alteraroot="/opt/altera"
+_alteradir="${_alteraroot}/${_quartusver}"
+_quartusdir="${_alteradir}/quartus"
 
 #In case you are using quartus ii subscription edition
-_alteralicense="${_alteradir}/License.dat"
+_licensedir="${_alteraroot}/license"
 
 # According to the installer script, these dependencies are needed for the installer
 				  
-source=("quartus.sh" "quartus.desktop" "51-usbblaster.rules")
-options=('!strip')
+source=("quartus.profile" "quartus.desktop" "51-usbblaster.rules")
+md5sums=('1f164b7bcf98622dcc3c7ba78172d25e'
+         '1a59698f6c8d78e8043d11ae68967591'
+         '611d105d50db5cc38ab8b402daadb2a5')
+
+prepare() {
+  cd "${srcdir}"
+  sed -i.bak "s,_quartusdir,${_quartusdir},g" quartus.profile
+  sed -i.bak "s,_licensedir,${_licensedir},g" quartus.profile
+  [[ $CARCH = x86_64 ]] && echo "export QUARTUS_64BIT=1" >> quartus.profile
+
+  sed -i.bak "s,_quartusdir,${_quartusdir},g" quartus.desktop
+}
 
 package() {
-    cd "${srcdir}"
+  cd "${srcdir}"
 
-    #ENV variables
-    sed -i.bak "s,_alteradir,$_alteradir,g" quartus.sh
-    sed -i.bak "s,_alteralicense,${_alteralicense},g" quartus.sh
-    [[ $CARCH = x86_64 ]] && echo "export QUARTUS_64BIT=1" >> quartus.sh
 
-    install -D -m644 quartus.sh "${pkgdir}/etc/profile.d/quartus.sh"
-    install -D -m644 51-usbblaster.rules "${pkgdir}/usr/lib/udev/rules.d/51-usbblaster.rules"
-    install -D -m644 quartus.desktop "${pkgdir}/usr/share/applications/quartus.desktop"
+  #ENV variables
+  install -m755 -d ${pkgdir}/etc/profile.d
+  install -D -m755 quartus.profile "${pkgdir}/etc/profile.d/quartus.sh"
+
+  install -D -m644 51-usbblaster.rules "${pkgdir}/usr/lib/udev/rules.d/51-usbblaster.rules"
+  install -D -m644 quartus.desktop "${pkgdir}/usr/share/applications/quartus.desktop"
 }
 
 # vim:set ts=2 sw=2 et:
-md5sums=('91abd8bfa69dbe678ea8d8927af98712'
-         'a1984f06442d98b0c433ea923a11725b'
-         '3d448098eda1515e503ed9dcac7b64a5')
