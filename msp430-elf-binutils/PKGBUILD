@@ -24,7 +24,7 @@ prepare() {
 }
 
 build() {
-  mkdir -p {srcdir}/binutils-build
+  mkdir -p ${srcdir}/binutils-build
   cd ${srcdir}/binutils-build
 
   "${srcdir}/binutils-${pkgver}/configure" --prefix=/usr \
