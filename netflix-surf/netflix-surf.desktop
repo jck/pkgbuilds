@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Netflix
-Comment=Watch movies and TV shows on your PC
-Exec=netflix-surf
-Terminal=false
-Type=Application
-StartupNotify=true
-Icon=netflix-surf
-Categories=Video;Player;AudioVideo;
