@@ -58,6 +58,7 @@ build() {
       --infodir=/usr/share/info \
       --libdir=/usr/msp430/lib \
       --mandir=/usr/share/man \
+      --disable-werror \
       --target=msp430
 
   # This checks the host environment and makes sure all the necessary
