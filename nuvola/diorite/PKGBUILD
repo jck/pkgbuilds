@@ -2,7 +2,7 @@
 
 pkgname=diorite-git
 pkgver=2015.01.19.888cb5f
-pkgrel=2
+pkgrel=3
 pkgdesc="Utility and widget library based on Glib and GTK3"
 arch=('i686' 'x86_64')
 url="https://tiliado.eu/diorite"
@@ -19,6 +19,7 @@ pkgver() {
 }
 
 build() {
+  cd "$pkgname"
   ./waf configure --prefix=/usr
   ./waf build
 } 
