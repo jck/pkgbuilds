@@ -2,14 +2,14 @@
 
 pkgname=diorite-git
 pkgver=2015.01.19.888cb5f
-pkgrel=3
+pkgrel=4
 pkgdesc="Utility and widget library based on Glib and GTK3"
 arch=('i686' 'x86_64')
 url="https://tiliado.eu/diorite"
 license=('GPL')
 makedepends=('git')
 provides=('diorite')
-depends=('python' 'glib2' 'gtk3')
+depends=('python' 'vala' 'glib2' 'gtk3')
 source=("$pkgname::git://github.com/tiliado/diorite")
 md5sums=('SKIP')
 
