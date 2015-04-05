@@ -1,0 +1,43 @@
+# Maintainer: Keerthan Jaic <jckeerthan at gmail dot com>
+
+pkgname=aocl-sdk
+_rel=14.1.1
+_patch=190
+pkgver=${_rel}.${_patch}
+pkgrel=1
+pkgdesc="Altera OpenCL SDK"
+
+arch=('x86_64')
+url="http://www.altera.com"
+license=('custom')
+
+_alteradir="/opt/altera"
+
+depends=('gcc-libs-multilib')
+
+options=('!strip')
+_sname=AOCLSetup
+_setup=${_sname}-${pkgver}-linux.run
+_surl="http://download.altera.com/akdlm/software/acdsinst/${_rel}/${_patch}/ib_installers/${_setup}"
+source=(${_surl} 'profile.sh')
+md5sums=('2e4b3f353cb7f336f0290e849229bc2a'
+         '9920785e56df1c0ecc304741b9beed5c')
+
+PKGEXT='.pkg.tar'
+
+package() {
+	cd "${srcdir}"
+
+	chmod a+x ${_setup}
+	./${_setup} --mode unattended --installdir  "${pkgdir}${_alteradir}"
+  install -Dm644 ${pkgdir}${_alteradir}/Altera.icd "${pkgdir}/etc/OpenCL/vendors/Altera.icd"
+
+	# Remove uninstaller and install logs since we have a working package management
+	rm -r "${pkgdir}${_alteradir}/uninstall"
+	rm -r "${pkgdir}${_alteradir}/logs"
+
+	# Replace altera directory in integration files
+	sed -i "s,_installdir,${_alteradir},g" profile.sh
+
+	install -Dm755 profile.sh "${pkgdir}/etc/profile.d/${pkgname}.sh"
+}

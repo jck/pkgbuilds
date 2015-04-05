@@ -1,0 +1,2 @@
+export ALTERAOCLSDKROOT=_alteradir/hld
+export PATH=$PATH:$ALTERAOCLSDKROOT/bin
