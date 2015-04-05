@@ -1,0 +1,58 @@
+# Maintainer: Keerthan Jaic <jckeerthan at gmail dot com>
+
+pkgname=quartus-subscription
+_rel=14.1
+_patch=186
+_urel=14.1.1
+_upatch=190
+pkgver=${_urel}.${_upatch}
+pkgrel=1
+pkgdesc="Altera's Quartus II design software (Subscription edition)"
+
+arch=('x86_64')
+url="http://www.altera.com"
+license=('custom')
+
+_alteradir="/opt/altera"
+
+depends=('gtk2')
+
+options=('!strip')
+_sname=QuartusSetup
+_setup=${_sname}-${_rel}.0.${_patch}-linux.run
+_usetup=${_sname}-${pkgver}-linux.run
+_surl="http://download.altera.com/akdlm/software/acdsinst/${_rel}/${_patch}/ib_installers/${_setup}"
+_usurl="http://download.altera.com/akdlm/software/acdsinst/${_urel}/${_upatch}/update/${_usetup}"
+source=(${_surl} ${_usurl} 'profile.sh' 'quartus.desktop' '51-usbblaster.rules')
+md5sums=('5a4696ed4ac2970897dc29714a7ecf5a'
+         'aa1623894de38069635913da2de33167'
+         '7302a2194ba701b72d65d7318a673085'
+         'c7519b531cf7552f9e3ec0ad87a96680'
+         '611d105d50db5cc38ab8b402daadb2a5')
+
+PKGEXT='.pkg.tar'
+
+prepare() {
+  cd "${srcdir}"
+  sed -i.bak "s,_alteradir,${_alteradir},g" profile.sh
+  sed -i.bak "s,_alteradir,${_alteradir},g" quartus.desktop
+}
+
+package() {
+	cd "${srcdir}"
+
+  echo "Installing base software"
+	chmod a+x ${_setup}
+	./${_setup} --mode unattended --installdir  "${pkgdir}${_alteradir}"
+
+  echo "Installing update"
+	chmod a+x ${_usetup}
+	./${_usetup} --mode unattended --installdir  "${pkgdir}${_alteradir}"
+
+	rm -r "${pkgdir}${_alteradir}/uninstall"
+	rm -r "${pkgdir}${_alteradir}/logs"
+
+  install -Dm755 profile.sh "${pkgdir}/etc/profile.d/quartus.sh"
+  install -Dm644 51-usbblaster.rules "${pkgdir}/usr/lib/udev/rules.d/51-usbblaster.rules"
+  install -Dm644 quartus.desktop "${pkgdir}/usr/share/applications/quartus.desktop"
+}
