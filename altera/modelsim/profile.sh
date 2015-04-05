@@ -1,1 +1,1 @@
-export PATH=$PATH:_installdir/bin
+export PATH=$PATH:_alteradir/_modelsim_edition/bin

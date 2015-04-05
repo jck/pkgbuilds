@@ -23,9 +23,15 @@ _setup=${_sname}-${pkgver}-linux.run
 _surl="http://download.altera.com/akdlm/software/acdsinst/${_rel}/${_patch}/ib_installers/${_setup}"
 source=(${_surl} 'profile.sh')
 md5sums=('70be49af8a26d4345937ed6be4d568c8'
-         '912842f9623322fb9f61659c7bd548ed')
+         '66ba4d6142a4066fb262058e4c0ac66e')
 
 PKGEXT='.pkg.tar'
+
+prepare() {
+  cd "${srcdir}"
+	sed -i "s,_alteradir,${_alteradir},g" profile.sh
+	sed -i "s,_modelsim_edition,${_modelsim_edition},g" profile.sh
+}
 
 package() {
 	cd "${srcdir}"
@@ -33,12 +39,8 @@ package() {
 	chmod a+x ${_setup}
 	./${_setup} --mode unattended --installdir  "${pkgdir}${_alteradir}" --modelsim_edition ${_modelsim_edition}
 
-	# Remove uninstaller and install logs since we have a working package management
 	rm -r "${pkgdir}${_alteradir}/uninstall"
 	rm -r "${pkgdir}${_alteradir}/logs"
-
-	# Replace altera directory in integration files
-	sed -i "s,_installdir,${_alteradir}/${_modelsim_edition},g" profile.sh
 
 	install -Dm755 profile.sh "${pkgdir}/etc/profile.d/${pkgname}.sh"
 }
