@@ -1,0 +1,27 @@
+_dev='stratixv'
+
+# template start; name=quartus-device; version=1.0;
+# Maintainer: Keerthan Jaic <jckeerthan at gmail dot com>
+
+pkgname=quartus-device-${_dev}
+_rel=14.1
+_patch=186
+pkgver=${_rel}.0.${_patch}
+pkgrel=1
+pkgdesc="${_dev} device support for Quartus II"
+arch=('x86_64')
+url="http://www.altera.com"
+license=('custom')
+depends=('quartus-subscription')
+source=("${_dev}.zip::http://download.altera.com/akdlm/software/acdsinst/${_rel}/${_patch}/ib_installers/${_dev}-${pkgver}.qdz")
+md5sums=('e7b7a4a83e723da08d19c1da2f559f4f')
+options=(!strip)
+PKGEXT='.pkg.tar'
+
+
+package() {
+	cd "$srcdir"
+	install -d $pkgdir/opt/altera
+	cp -r -P quartus/ $pkgdir/opt/altera
+}
+# template end;
