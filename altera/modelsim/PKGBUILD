@@ -1,0 +1,44 @@
+# Maintainer: Keerthan Jaic <jckeerthan at gmail dot com>
+
+pkgname=modelsim-altera-starter
+_rel=14.1
+_patch=186
+pkgver=${_rel}.0.${_patch}
+pkgrel=1
+pkgdesc="Simulation software for Altera FPGA's"
+
+arch=('x86_64' 'i686')
+url="http://www.altera.com"
+license=('custom')
+
+_alteradir="/opt/altera"
+_modelsim_edition="modelsim_ase"
+
+depends_i686=('libxft' 'ncurses' 'libxext')
+depends_x86_64=('lib32-libxft' 'lib32-ncurses' 'lib32-libxext')
+
+options=('!strip')
+_sname=ModelSimSetup
+_setup=${_sname}-${pkgver}-linux.run
+_surl="http://download.altera.com/akdlm/software/acdsinst/${_rel}/${_patch}/ib_installers/${_setup}"
+source=(${_surl} 'profile.sh')
+md5sums=('70be49af8a26d4345937ed6be4d568c8'
+         '912842f9623322fb9f61659c7bd548ed')
+
+PKGEXT='.pkg.tar'
+
+package() {
+	cd "${srcdir}"
+
+	chmod a+x ${_setup}
+	./${_setup} --mode unattended --installdir  "${pkgdir}${_alteradir}" --modelsim_edition ${_modelsim_edition}
+
+	# Remove uninstaller and install logs since we have a working package management
+	rm -r "${pkgdir}${_alteradir}/uninstall"
+	rm -r "${pkgdir}${_alteradir}/logs"
+
+	# Replace altera directory in integration files
+	sed -i "s,_installdir,${_alteradir}/${_modelsim_edition},g" profile.sh
+
+	install -Dm755 profile.sh "${pkgdir}/etc/profile.d/${pkgname}.sh"
+}
