@@ -1,8 +1,12 @@
 ./*/
-*src/
-*pkg/
+src/
+pkg/
 *.log*
 
 *.[xgb]z
 *.bz2
 *.zip
+*.run
+*.tar
+
+tmp
