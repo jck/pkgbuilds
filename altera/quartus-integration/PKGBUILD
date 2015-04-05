@@ -1,0 +1,32 @@
+# Maintainer: Keerthan Jaic <jckeerthan at gmail dot com>
+
+pkgname=quartus-integration
+pkgver=3
+pkgrel=1
+pkgdesc="Quartus II system integration files for archlinux"
+arch=('x86_64')
+depends=('gtk2')
+url="http://www.altera.com/products/software/quartus-ii/"
+license=('GPL')
+
+_alteradir="/opt/altera"
+
+source=("profile.sh" "quartus.desktop" "51-usbblaster.rules")
+md5sums=('7302a2194ba701b72d65d7318a673085'
+         'c7519b531cf7552f9e3ec0ad87a96680'
+         '611d105d50db5cc38ab8b402daadb2a5')
+
+prepare() {
+  cd "${srcdir}"
+  sed -i.bak "s,_alteradir,${_alteradir},g" profile.sh
+  sed -i.bak "s,_alteradir,${_alteradir},g" quartus.desktop
+}
+
+package() {
+  cd "${srcdir}"
+  install -Dm755 profile.sh "${pkgdir}/etc/profile.d/quartus.sh"
+  install -D -m644 51-usbblaster.rules "${pkgdir}/usr/lib/udev/rules.d/51-usbblaster.rules"
+  install -D -m644 quartus.desktop "${pkgdir}/usr/share/applications/quartus.desktop"
+}
+
+# vim:set ts=2 sw=2 et:
