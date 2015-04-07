@@ -1,0 +1,36 @@
+# Maintainer: Your Name <youremail@domain.com>
+
+_prodname=pts
+pkgname=synopsys-$_prodname
+pkgver=J_2014.12_SP2
+_dirpref=pt
+_ftpname=${_prodname}_v${pkgver//_/-}
+_ftpdir=${_dirpref}_v${pkgver//_/-}
+pkgrel=1
+pkgdesc=""
+arch=('x86_64')
+url=""
+license=('custom')
+#depends=(synopsys-profile libjpeg6 libpng12)
+#libmng
+makedepends=(synopsys-installer)
+options=(!strip libtool staticlibs emptydirs)
+source=("ftp://ftp.synopsys.com/rev/$_ftpdir/${_ftpname}_common.spf"
+        "ftp://ftp.synopsys.com/rev/$_ftpdir/${_ftpname}_amd64.spf"
+        'pt.sh')
+md5sums=('71300f838a15bed638276d5aa6bc9590'
+         '7bc7abf29ec9e33b93428178768475df'
+         '0d7d4ac81959cfc56f37481125c336e7')
+# noextract=(*)
+
+DLAGENTS=('ftp::/usr/bin/wget -O %o %u')
+PKGEXT='.pkg.tar'
+
+prepare() {
+  sed -i.bak "s,_pkgver,${pkgver//_/-},g" pt.sh
+}
+
+package() {
+  /opt/synopsys/installer/installer -install_as_root -batch_installer -source $srcdir -target $pkgdir/opt/synopsys
+  install -Dm755 $srcdir/pt.sh $pkgdir/opt/synopsys/profile.d/pt.sh
+}

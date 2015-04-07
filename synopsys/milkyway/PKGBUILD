@@ -1,0 +1,34 @@
+# Maintainer: Your Name <youremail@domain.com>
+
+_prodname=mw
+pkgname=synopsys-$_prodname
+pkgver=J_2014.09_SP4
+_ftpname=${_prodname}_v${pkgver//_/-}
+pkgrel=1
+pkgdesc=""
+arch=('x86_64')
+url=""
+license=('custom')
+#depends=(synopsys-profile libjpeg6 libpng12)
+#libmng
+makedepends=(synopsys-installer)
+options=(!strip libtool staticlibs emptydirs)
+source=("ftp://ftp.synopsys.com/rev/$_ftpname/${_ftpname}_common.spf"
+        "ftp://ftp.synopsys.com/rev/$_ftpname/${_ftpname}_AMD.64.spf"
+        'mw.sh')
+md5sums=('d2524f22d972d248f2116bb60920c95b'
+         'dbbfaef857b545b6f8a94acbe09ff84c'
+         'c98137bda4d8b34f7a7f46a26f83b1f6')
+# noextract=(*)
+
+DLAGENTS=('ftp::/usr/bin/wget -O %o %u')
+PKGEXT='.pkg.tar'
+
+prepare() {
+  sed -i.bak "s,_pkgver,${pkgver//_/-},g" mw.sh
+}
+
+package() {
+  /opt/synopsys/installer/installer -install_as_root -batch_installer -source $srcdir -target $pkgdir/opt/synopsys
+  install -Dm755 $srcdir/mw.sh $pkgdir/opt/synopsys/profile.d/mw.sh
+}

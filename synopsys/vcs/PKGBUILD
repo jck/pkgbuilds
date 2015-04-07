@@ -1,0 +1,35 @@
+# Maintainer: Your Name <youremail@domain.com>
+
+_prodname=vcs-mx
+pkgname=synopsys-$_prodname
+pkgver=J_2014.12
+_ftpdir=${_prodname//-/_}_v${pkgver//_/-}
+_ftpname=${_prodname}_v${pkgver//_/-}
+pkgrel=1
+pkgdesc=""
+arch=('x86_64')
+url=""
+license=('custom')
+#depends=(synopsys-profile libjpeg6 libpng12)
+#libmng
+makedepends=(synopsys-installer)
+options=(!strip libtool staticlibs emptydirs)
+source=("ftp://ftp.synopsys.com/rev/$_ftpdir/${_ftpname}_common.spf"
+        "ftp://ftp.synopsys.com/rev/$_ftpdir/${_ftpname}_amd64.spf"
+        'vcs.sh')
+md5sums=('a07b7302e67ab23c5144dddae32c6e7b'
+         'b1d212491f41df606642a57e4decb645'
+         '7c2764428cc4657431030f060cf10d27')
+# noextract=(*)
+
+DLAGENTS=('ftp::/usr/bin/wget -O %o %u')
+PKGEXT='.pkg.tar'
+
+prepare() {
+  sed -i.bak "s,_pkgver,${pkgver//_/-},g" vcs.sh
+}
+
+package() {
+  /opt/synopsys/installer/installer -install_as_root -batch_installer -source $srcdir -target $pkgdir/opt/synopsys
+  install -Dm755 $srcdir/vcs.sh $pkgdir/opt/synopsys/profile.d/vcs.sh
+}
