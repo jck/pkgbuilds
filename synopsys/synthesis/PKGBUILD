@@ -1,0 +1,34 @@
+# Maintainer: Your Name <youremail@domain.com>
+
+_prodname=syn
+pkgname=synopsys-$_prodname
+pkgver=J_2014.09_SP4
+_ftpname=${_prodname}_v${pkgver//_/-}
+pkgrel=1
+pkgdesc=""
+arch=('x86_64')
+url=""
+license=('custom')
+#depends=(synopsys-profile libjpeg6 libpng12)
+#libmng
+makedepends=(synopsys-installer)
+options=(!strip libtool staticlibs emptydirs)
+source=("ftp://ftp.synopsys.com/rev/$_ftpname/${_ftpname}_common.spf"
+        "ftp://ftp.synopsys.com/rev/$_ftpname/${_ftpname}_amd64.spf"
+        'dc.sh')
+md5sums=('43839bd55710cbeaf77948b2b8e81cf9'
+         'f7d4949e4984e25514f0ef9f869c4d0e'
+         '32e93f95e5b7a555e880ef20912a1c56')
+# noextract=(*)
+
+DLAGENTS=('ftp::/usr/bin/wget -O %o %u')
+PKGEXT='.pkg.tar'
+
+prepare() {
+  sed -i.bak "s,_pkgver,${pkgver//_/-},g" dc.sh
+}
+
+package() {
+  /opt/synopsys/installer/installer -install_as_root -batch_installer -source $srcdir -target $pkgdir/opt/synopsys
+  install -Dm755 $srcdir/dc.sh $pkgdir/opt/synopsys/profile.d/dc.sh
+}

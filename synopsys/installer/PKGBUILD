@@ -1,0 +1,29 @@
+# Maintainer: Your Name <youremail@domain.com>
+
+_prodname=installer
+pkgname=synopsys-$_prodname
+pkgver=3.2
+pkgrel=1
+pkgdesc=""
+arch=('x86_64')
+url=""
+license=('custom')
+depends=()
+makedepends=()
+optdepends=()
+_filename=SynopsysInstaller_v${pkgver}.run
+source=("ftp://ftp.synopsys.com/rev/${_prodname}_v$pkgver/$_filename")
+md5sums=('a698837422db8b80779d62cda0f35b63')
+options=(!strip staticlibs)
+
+DLAGENTS=('ftp::/usr/bin/wget -O %o %u')
+
+prepare() {
+	cd "$srcdir"
+  chmod +x $_filename
+}
+
+package() {
+  ./$_filename -dm755 $pkgdir/opt/synopsys/installer
+  chown -R root:root $pkgdir/opt/synopsys/installer
+}

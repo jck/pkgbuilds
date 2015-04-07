@@ -1,0 +1,17 @@
+pkgname=synopsys-profile
+pkgver=1
+pkgrel=1
+pkgdesc="synopsys profile"
+arch=('x86_64')
+url="synopsys"
+license=('custom')
+source=("synopsys.sh")
+md5sums=('05cc936047db358bce4b368d9d1cc212')
+
+package() {
+  source synopsys.sh
+  # install -dm755 "${pkgdir}/${SYNOPSYS}/profile.d"
+  install -Dm755 "$srcdir/synopsys.sh" "${pkgdir}/etc/profile.d/synopsys.sh"
+}
+
+# vim:set ts=2 sw=2 et:
