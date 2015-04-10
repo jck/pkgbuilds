@@ -1,6 +1,8 @@
 # Maintainer: Keerthan Jaic <jckeerthan at gmail dot com>
 
-pkgname=modelsim-altera-starter
+# Uncomment the following line for altera starter edition
+# _starter=1
+pkgname=modelsim-altera
 _rel=14.1
 _patch=186
 pkgver=${_rel}.0.${_patch}
@@ -12,7 +14,11 @@ url="http://www.altera.com"
 license=('custom')
 
 _alteradir="/opt/altera"
-_modelsim_edition="modelsim_ase"
+_modelsim_edition="modelsim_ae"
+if [[ $_starter ]]; then
+  pkgname+="-starter"
+  _modelsim_edition="modelsim_ase"
+fi
 
 depends_i686=('libxft' 'ncurses' 'libxext')
 depends_x86_64=('lib32-libxft' 'lib32-ncurses' 'lib32-libxext')
