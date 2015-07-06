@@ -4,8 +4,8 @@ _dev='cyclonev'
 # Maintainer: Keerthan Jaic <jckeerthan at gmail dot com>
 
 pkgname=quartus-device-${_dev}
-_rel=14.1
-_patch=186
+_rel=15.0
+_patch=145
 pkgver=${_rel}.0.${_patch}
 pkgrel=1
 pkgdesc="${_dev} device support for Quartus II"
@@ -14,7 +14,7 @@ url="http://www.altera.com"
 license=('custom')
 depends=('quartus-subscription')
 source=("${_dev}.zip::http://download.altera.com/akdlm/software/acdsinst/${_rel}/${_patch}/ib_installers/${_dev}-${pkgver}.qdz")
-md5sums=('446d7ee5999226cd3294f890a12c53cc')
+md5sums=('df0eee4512e0f3037438c037afdeaf41')
 options=(!strip)
 PKGEXT='.pkg.tar'
 
