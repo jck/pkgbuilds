@@ -2,7 +2,7 @@
 
 _prodname=mw
 pkgname=synopsys-$_prodname
-pkgver=J_2014.09_SP4
+pkgver=K_2015.06
 _ftpname=${_prodname}_v${pkgver//_/-}
 pkgrel=1
 pkgdesc=""
@@ -14,10 +14,10 @@ license=('custom')
 makedepends=(synopsys-installer)
 options=(!strip libtool staticlibs emptydirs)
 source=("ftp://ftp.synopsys.com/rev/$_ftpname/${_ftpname}_common.spf"
-        "ftp://ftp.synopsys.com/rev/$_ftpname/${_ftpname}_AMD.64.spf"
+        "ftp://ftp.synopsys.com/rev/$_ftpname/${_ftpname}_linux64.spf"
         'mw.sh')
-md5sums=('d2524f22d972d248f2116bb60920c95b'
-         'dbbfaef857b545b6f8a94acbe09ff84c'
+md5sums=('2e9283e369a6d79c2e8b7bf626311369'
+         '281e09bbc4e358dbf44dcd4019412bed'
          'c98137bda4d8b34f7a7f46a26f83b1f6')
 # noextract=(*)
 

@@ -2,7 +2,7 @@
 
 _prodname=vcs-mx
 pkgname=synopsys-$_prodname
-pkgver=J_2014.12
+pkgver=J_2014.12_SP2
 _ftpdir=${_prodname//-/_}_v${pkgver//_/-}
 _ftpname=${_prodname}_v${pkgver//_/-}
 pkgrel=1
@@ -17,8 +17,8 @@ options=(!strip libtool staticlibs emptydirs)
 source=("ftp://ftp.synopsys.com/rev/$_ftpdir/${_ftpname}_common.spf"
         "ftp://ftp.synopsys.com/rev/$_ftpdir/${_ftpname}_amd64.spf"
         'vcs.sh')
-md5sums=('a07b7302e67ab23c5144dddae32c6e7b'
-         'b1d212491f41df606642a57e4decb645'
+md5sums=('10bc1d9d63a18bc89f575eaff0b95b81'
+         '387f642b845e4098c2711daf25a14ff4'
          '7c2764428cc4657431030f060cf10d27')
 # noextract=(*)
 

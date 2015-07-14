@@ -2,7 +2,7 @@
 
 _prodname=syn
 pkgname=synopsys-$_prodname
-pkgver=J_2014.09_SP4
+pkgver=K_2015.06
 _ftpname=${_prodname}_v${pkgver//_/-}
 pkgrel=1
 pkgdesc=""
@@ -14,12 +14,13 @@ license=('custom')
 makedepends=(synopsys-installer)
 options=(!strip libtool staticlibs emptydirs)
 source=("ftp://ftp.synopsys.com/rev/$_ftpname/${_ftpname}_common.spf"
-        "ftp://ftp.synopsys.com/rev/$_ftpname/${_ftpname}_amd64.spf"
+        # "ftp://ftp.synopsys.com/rev/$_ftpname/${_ftpname}_SI32.tar"
+        "ftp://ftp.synopsys.com/rev/$_ftpname/${_ftpname}_linux64.spf"
         'dc.sh')
-md5sums=('43839bd55710cbeaf77948b2b8e81cf9'
-         'f7d4949e4984e25514f0ef9f869c4d0e'
+md5sums=('315ab589e661b5272aff9548109e1f5a'
+         'a675c0db9e6e4bfa3348fe5abcb475f7'
          '32e93f95e5b7a555e880ef20912a1c56')
-# noextract=(*)
+# noextract=(${_ftpname}_SI32.tar)
 
 DLAGENTS=('ftp::/usr/bin/wget -O %o %u')
 PKGEXT='.pkg.tar'
