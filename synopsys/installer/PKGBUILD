@@ -1,9 +1,9 @@
-# Maintainer: Your Name <youremail@domain.com>
+# Maintainer: Keerthan Jaic <jckeerthan at gmail dot com>
 
 _prodname=installer
 pkgname=synopsys-$_prodname
 pkgver=3.2
-pkgrel=1
+pkgrel=2
 pkgdesc=""
 arch=('x86_64')
 groups=('synopsys')
@@ -13,8 +13,8 @@ depends=()
 makedepends=()
 optdepends=()
 _filename=SynopsysInstaller_v${pkgver}.run
-source=("ftp://ftp.synopsys.com/rev/${_prodname}_v$pkgver/$_filename")
-md5sums=('a698837422db8b80779d62cda0f35b63')
+source=("ftp://ftp.synopsys.com/rev/${_prodname}_v$pkgver/$_filename"
+        'profile.sh')
 options=(!strip staticlibs)
 
 DLAGENTS=('ftp::/usr/bin/wget -O %o %u')
@@ -25,6 +25,10 @@ prepare() {
 }
 
 package() {
-  ./$_filename -dm755 $pkgdir/opt/synopsys/installer
+  ./$_filename -dir $pkgdir/opt/synopsys/installer
   chown -R root:root $pkgdir/opt/synopsys/installer
+  install -Dm755 "$srcdir/profile.sh" "${pkgdir}/etc/profile.d/synopsys.sh"
 }
+
+md5sums=('a698837422db8b80779d62cda0f35b63'
+         '05cc936047db358bce4b368d9d1cc212')
