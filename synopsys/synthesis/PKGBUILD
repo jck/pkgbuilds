@@ -1,4 +1,4 @@
-# Maintainer: Your Name <youremail@domain.com>
+# Maintainer: Keerthan Jaic <jckeerthan at gmail dot com>
 
 _prodname=syn
 pkgname=synopsys-$_prodname
@@ -17,10 +17,7 @@ options=(!strip libtool staticlibs emptydirs)
 source=("ftp://ftp.synopsys.com/rev/$_ftpname/${_ftpname}_common.spf"
         "ftp://ftp.synopsys.com/rev/$_ftpname/${_ftpname}_linux64.spf"
         'dc.sh')
-md5sums=('315ab589e661b5272aff9548109e1f5a'
-         'a675c0db9e6e4bfa3348fe5abcb475f7'
-         '32e93f95e5b7a555e880ef20912a1c56')
-# noextract=(${_ftpname}_SI32.tar)
+noextract=(*)
 
 DLAGENTS=('ftp::/usr/bin/wget -O %o %u')
 PKGEXT='.pkg.tar'
@@ -30,6 +27,10 @@ prepare() {
 }
 
 package() {
-  /opt/synopsys/installer/installer -install_as_root -batch_installer -source $srcdir -target $pkgdir/opt/synopsys
+  yes | /opt/synopsys/installer/installer -install_as_root -batch_installer -source $srcdir -target $pkgdir/opt/synopsys
   install -Dm755 $srcdir/dc.sh $pkgdir/opt/synopsys/profile.d/dc.sh
 }
+
+md5sums=('315ab589e661b5272aff9548109e1f5a'
+         'a675c0db9e6e4bfa3348fe5abcb475f7'
+         '32e93f95e5b7a555e880ef20912a1c56')

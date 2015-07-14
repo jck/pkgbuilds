@@ -1,4 +1,4 @@
-# Maintainer: Your Name <youremail@domain.com>
+# Maintainer: Keerthan Jaic <jckeerthan at gmail dot com>
 
 _prodname=vcs-mx
 pkgname=synopsys-$_prodname
@@ -18,10 +18,7 @@ options=(!strip libtool staticlibs emptydirs)
 source=("ftp://ftp.synopsys.com/rev/$_ftpdir/${_ftpname}_common.spf"
         "ftp://ftp.synopsys.com/rev/$_ftpdir/${_ftpname}_amd64.spf"
         'vcs.sh')
-md5sums=('10bc1d9d63a18bc89f575eaff0b95b81'
-         '387f642b845e4098c2711daf25a14ff4'
-         '7c2764428cc4657431030f060cf10d27')
-# noextract=(*)
+noextract=(*)
 
 DLAGENTS=('ftp::/usr/bin/wget -O %o %u')
 PKGEXT='.pkg.tar'
@@ -31,6 +28,10 @@ prepare() {
 }
 
 package() {
-  /opt/synopsys/installer/installer -install_as_root -batch_installer -source $srcdir -target $pkgdir/opt/synopsys
+  yes | /opt/synopsys/installer/installer -install_as_root -batch_installer -source $srcdir -target $pkgdir/opt/synopsys
   install -Dm755 $srcdir/vcs.sh $pkgdir/opt/synopsys/profile.d/vcs.sh
 }
+
+md5sums=('10bc1d9d63a18bc89f575eaff0b95b81'
+         '387f642b845e4098c2711daf25a14ff4'
+         '7c2764428cc4657431030f060cf10d27')

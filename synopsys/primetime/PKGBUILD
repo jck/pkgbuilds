@@ -1,4 +1,4 @@
-# Maintainer: Your Name <youremail@domain.com>
+# Maintainer: Keerthan Jaic <jckeerthan at gmail dot com>
 
 _prodname=pts
 pkgname=synopsys-$_prodname
@@ -18,11 +18,9 @@ makedepends=(synopsys-installer)
 options=(!strip libtool staticlibs emptydirs)
 source=("ftp://ftp.synopsys.com/rev/$_ftpdir/${_ftpname}_common.spf"
         "ftp://ftp.synopsys.com/rev/$_ftpdir/${_ftpname}_linux64.spf"
+        "ftp://ftp.synopsys.com/rev/$_ftpdir/${_ftpname}_SI32.tar"
         'pt.sh')
-md5sums=('8312135a4e27b24e8dc0c18e31f75470'
-         'eee5ea5fc41022df0d7887a6a6489ebf'
-         '0d7d4ac81959cfc56f37481125c336e7')
-# noextract=(*)
+noextract=(*)
 
 DLAGENTS=('ftp::/usr/bin/wget -O %o %u')
 PKGEXT='.pkg.tar'
@@ -32,6 +30,11 @@ prepare() {
 }
 
 package() {
-  /opt/synopsys/installer/installer -install_as_root -batch_installer -source $srcdir -target $pkgdir/opt/synopsys
+  yes | /opt/synopsys/installer/installer -install_as_root -batch_installer -source $srcdir -target $pkgdir/opt/synopsys
   install -Dm755 $srcdir/pt.sh $pkgdir/opt/synopsys/profile.d/pt.sh
 }
+
+md5sums=('8312135a4e27b24e8dc0c18e31f75470'
+         'eee5ea5fc41022df0d7887a6a6489ebf'
+         'da1466a2895e6a44b1e753c10fb889ad'
+         '0d7d4ac81959cfc56f37481125c336e7')
