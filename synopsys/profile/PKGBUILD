@@ -3,6 +3,7 @@ pkgver=1
 pkgrel=1
 pkgdesc="synopsys profile"
 arch=('x86_64')
+groups=('groups')
 url="synopsys"
 license=('custom')
 source=("synopsys.sh")

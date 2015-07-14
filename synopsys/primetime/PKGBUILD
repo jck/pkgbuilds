@@ -9,6 +9,7 @@ _ftpdir=${_dirpref}_v${pkgver//_/-}
 pkgrel=1
 pkgdesc=""
 arch=('x86_64')
+groups=('synopsys')
 url=""
 license=('custom')
 #depends=(synopsys-profile libjpeg6 libpng12)

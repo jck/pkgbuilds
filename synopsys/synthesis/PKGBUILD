@@ -7,6 +7,7 @@ _ftpname=${_prodname}_v${pkgver//_/-}
 pkgrel=1
 pkgdesc=""
 arch=('x86_64')
+groups=('groups')
 url=""
 license=('custom')
 #depends=(synopsys-profile libjpeg6 libpng12)
@@ -14,7 +15,6 @@ license=('custom')
 makedepends=(synopsys-installer)
 options=(!strip libtool staticlibs emptydirs)
 source=("ftp://ftp.synopsys.com/rev/$_ftpname/${_ftpname}_common.spf"
-        # "ftp://ftp.synopsys.com/rev/$_ftpname/${_ftpname}_SI32.tar"
         "ftp://ftp.synopsys.com/rev/$_ftpname/${_ftpname}_linux64.spf"
         'dc.sh')
 md5sums=('315ab589e661b5272aff9548109e1f5a'
