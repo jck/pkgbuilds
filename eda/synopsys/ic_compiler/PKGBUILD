@@ -1,0 +1,40 @@
+# Maintainer: Keerthan Jaic <jckeerthan at gmail dot com>
+
+_prodname=icc
+pkgname=synopsys-$_prodname
+pkgver=K_2015.06
+pkgrel=1
+pkgdesc=""
+arch=('x86_64')
+groups=('synopsys')
+url=""
+license=('custom')
+#depends=(synopsys-profile libjpeg6 libpng12)
+#libmng
+makedepends=(synopsys-installer)
+options=(!strip libtool staticlibs emptydirs)
+
+_ftpdir=ic_compiler_v${pkgver//_/-}
+_ftpname=${_prodname}_v${pkgver//_/-}
+source=("ftp://ftp.synopsys.com/rev/${_ftpdir}/${_ftpname}_common.spf"
+        "ftp://ftp.synopsys.com/rev/${_ftpdir}/${_ftpname}_linux64.spf"
+        "ftp://ftp.synopsys.com/rev/${_ftpdir}/${_ftpname}_SI32.tar"
+        'profile.sh')
+noextract=(*)
+
+DLAGENTS=('ftp::/usr/bin/wget -O %o %u')
+PKGEXT='.pkg.tar'
+
+prepare() {
+  sed -i "s/_pkgver/${pkgver//_/-}/g;s/_prodname/${_prodname}/g" profile.sh
+}
+
+package() {
+  yes | /opt/synopsys/installer/installer -install_as_root -batch_installer -source $srcdir -target $pkgdir/opt/synopsys
+  install -Dm755 $srcdir/profile.sh $pkgdir/opt/synopsys/profile.d/${_prodname}.sh
+}
+
+md5sums=('f55ad04260ef86b3b67c0b53ddf91b88'
+         '6dfe26eb4639db7af57b4c9014da6c1f'
+         '3c45dbdcb973e6586423788444cded58'
+         '6e5b971ab46c3473709f7a530052d32d')
