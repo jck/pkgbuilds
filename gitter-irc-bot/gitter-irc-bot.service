@@ -1,0 +1,11 @@
+[Unit]
+Description=gitter irc bot
+After=syslog.target network.target
+
+[Service]
+EnvironmentFile=/etc/conf.d/gitter-irc-bot
+ExecStart=/usr/bin/gitter-irc-bot
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
