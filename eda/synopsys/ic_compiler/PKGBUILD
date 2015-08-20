@@ -2,7 +2,7 @@
 
 _prodname=icc
 pkgname=synopsys-$_prodname
-pkgver=K_2015.06
+pkgver=K_2015.06_SP1
 pkgrel=1
 pkgdesc=""
 arch=('x86_64')
@@ -34,7 +34,7 @@ package() {
   install -Dm755 $srcdir/profile.sh $pkgdir/opt/synopsys/profile.d/${_prodname}.sh
 }
 
-md5sums=('f55ad04260ef86b3b67c0b53ddf91b88'
-         '6dfe26eb4639db7af57b4c9014da6c1f'
-         '3c45dbdcb973e6586423788444cded58'
+md5sums=('a838f67a4e7d5362858203f82ed9e550'
+         'ca39db5431c8d76fb290bf8425beaa2f'
+         '0ff69130756a9f6c7b4817e6f7d39420'
          '6e5b971ab46c3473709f7a530052d32d')

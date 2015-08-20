@@ -2,7 +2,7 @@
 
 _prodname=pts
 pkgname=synopsys-$_prodname
-pkgver=K_2015.06
+pkgver=K_2015.06_SP1
 _dirpref=pt
 _ftpname=${_prodname}_v${pkgver//_/-}
 _ftpdir=${_dirpref}_v${pkgver//_/-}
@@ -34,7 +34,7 @@ package() {
   install -Dm755 $srcdir/pt.sh $pkgdir/opt/synopsys/profile.d/pt.sh
 }
 
-md5sums=('8312135a4e27b24e8dc0c18e31f75470'
-         'eee5ea5fc41022df0d7887a6a6489ebf'
-         'da1466a2895e6a44b1e753c10fb889ad'
+md5sums=('ad5fcf1a428e99377d7fa58260b52be4'
+         'e5bbfc0b0f4b7dad77e9bf883708a482'
+         '2bccf9ac894ef206395584831a569f17'
          '0d7d4ac81959cfc56f37481125c336e7')

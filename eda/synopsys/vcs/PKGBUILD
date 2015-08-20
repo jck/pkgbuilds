@@ -2,7 +2,7 @@
 
 _prodname=vcs-mx
 pkgname=synopsys-$_prodname
-pkgver=J_2014.12_SP2
+pkgver=J_2014.12_SP3
 _ftpdir=${_prodname//-/_}_v${pkgver//_/-}
 _ftpname=${_prodname}_v${pkgver//_/-}
 pkgrel=1
@@ -32,6 +32,6 @@ package() {
   install -Dm755 $srcdir/vcs.sh $pkgdir/opt/synopsys/profile.d/vcs.sh
 }
 
-md5sums=('10bc1d9d63a18bc89f575eaff0b95b81'
-         '387f642b845e4098c2711daf25a14ff4'
+md5sums=('0dfaba0819ecac4555cf1d7ae2abe92a'
+         '9143007d211a727d1707ce841409f0e6'
          '7c2764428cc4657431030f060cf10d27')
