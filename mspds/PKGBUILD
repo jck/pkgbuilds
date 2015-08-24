@@ -1,6 +1,6 @@
 # Maintainer: Your Name <youremail@domain.com>
 pkgname=mspds
-pkgver=3.4.3.004
+pkgver=3.5.1.001
 pkgrel=1
 pkgdesc="MSP430 Debug Stack. Contains a dynamic link library as well as embedded firmware that runs on the MSP-FET430UIF or the eZ430 emulators."
 arch=('i686' 'x86_64')
@@ -8,14 +8,13 @@ url="http://processors.wiki.ti.com/index.php/MSPDS_Open_Source_Package"
 license=('custom:TI Open Source')
 group=('msp430')
 depends=('hidapi' 'boost')
-makedepends=('unzip' 'dos2unix')
-optdepends=('mspdebug-git')
-source=("http://www-s.ti.com/sc/techzip/slac460.zip"
-        "https://github.com/jck/mspds/releases/download/v${pkgver}/v${pkgver}.patch")
+makedepends=('unzip')
+source=("http://www-s.ti.com/sc/techzip/slac460n.zip" "mspds.patch")
+noextract=(slac460n.zip)
 
 prepare() {
-  find . -type f -exec dos2unix -q '{}' \;
-  patch -p1 -d MSPDebugStack_OS_Package < ../v3.4.3.004.patch
+  unzip -o "$srcdir/slac460n.zip"
+  patch -p1 -d MSPDebugStack_OS_Package < ../mspds.patch
 }
 
 build() {
@@ -26,5 +25,5 @@ build() {
 package() {
   install -Dm644 "$srcdir/MSPDebugStack_OS_Package/libmsp430.so" "$pkgdir/usr/lib/libmsp430.so"
 }
-md5sums=('0ebedd72ec46a2b53d20a34d47b4d70b'
-         'fc3133fdc125145d2d8b25a646bebd88')
+md5sums=('3b11220a5c6d0a83bc449e03021774c6'
+         '815a445e20cd5d2d82cf5b8b80839765')

@@ -1,0 +1,53 @@
+From: Keerthan Jaic <jckeerthan@gmail.com>
+Date: Mon, 24 Aug 2015 16:49:44 -0400
+Subject: Use system hidapi
+
+---
+ Makefile                       | 6 +++++-
+ ThirdParty/BSL430_DLL/Makefile | 2 ++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index ba8e7e9..982460b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -67,11 +67,14 @@ ifeq ($(PLATFORM),Linux)
+ 	LIBDIRS += -L$(BOOST_DIR)/stage/lib
+ 	endif
+ 
++	INCLUDES += $(shell pkg-config --cflags hidapi-libusb)
++	LIBDIRS += $(shell pkg-config --libs hidapi-libusb)
++
+ 	OUTNAME := -Wl,-soname,
+ 	BSTATIC := -Wl,-Bstatic
+ 	BDYNAMIC := -Wl,-Bdynamic
+ 
+-	HIDOBJ := $(LIBTHIRD)/hid-libusb.o
++	HIDOBJ :=
+ else
+ 	CXX:= clang++
+ 
+@@ -133,6 +136,7 @@ $(PCH_COMPILED): $(PCH_HEADER)
+ 	$(CXX) -c -o $@ $< $(USE_PCH) $(CXXFLAGS) $(INCLUDES) $(DEFINES)
+ 
+ $(BSLLIB):
++	mkdir -p $(LIBTHIRD)
+ 	$(MAKE) -C ./ThirdParty/BSL430_DLL
+ 
+ install:
+diff --git a/ThirdParty/BSL430_DLL/Makefile b/ThirdParty/BSL430_DLL/Makefile
+index 1dc8684..aa6238a 100644
+--- a/ThirdParty/BSL430_DLL/Makefile
++++ b/ThirdParty/BSL430_DLL/Makefile
+@@ -46,6 +46,8 @@ ifeq ($(PLATFORM),Linux)
+ 	ifdef BOOST_DIR
+ 	INCLUDES += -I$(BOOST_DIR)
+ 	endif
++
++	INCLUDES += $(shell pkg-config --cflags hidapi-libusb)
+ else
+ 	CXX:= clang++
+ 
+-- 
+2.5.0
+
