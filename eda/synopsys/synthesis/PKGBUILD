@@ -2,7 +2,7 @@
 
 _prodname=syn
 pkgname=synopsys-$_prodname
-pkgver=K_2015.06_SP1
+pkgver=K_2015.06_SP2
 _ftpname=${_prodname}_v${pkgver//_/-}
 pkgrel=1
 pkgdesc=""
@@ -32,7 +32,7 @@ package() {
   install -Dm755 $srcdir/dc.sh $pkgdir/opt/synopsys/profile.d/dc.sh
 }
 
-md5sums=('7d213e530ed6402385ca7ecb091a8969'
-         '8ba07183d0b8476279cb9caa016f2b39'
-         'a651328a9d803960ef8462340c1a55f9'
+md5sums=('431ec76ac6ca830e5e59ec0d30e61125'
+         '6039a647f8177ee3e63ba540f662f9b4'
+         '31dbcfd37a96203cf9b8f5d5052bc5d0'
          '32e93f95e5b7a555e880ef20912a1c56')

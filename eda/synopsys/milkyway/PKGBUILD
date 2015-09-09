@@ -2,7 +2,7 @@
 
 _prodname=mw
 pkgname=synopsys-$_prodname
-pkgver=K_2015.06_SP1
+pkgver=K_2015.06_SP2
 _ftpname=${_prodname}_v${pkgver//_/-}
 pkgrel=1
 pkgdesc=""
@@ -32,7 +32,7 @@ package() {
   install -Dm755 $srcdir/mw.sh $pkgdir/opt/synopsys/profile.d/mw.sh
 }
 
-md5sums=('20e45005ce750a54cc4402bb8c03086e'
-         '7081b1ae44ef98bcae970e8bfbb0d385'
-         '26e650205828dcaef9a055b352af4e19'
+md5sums=('c6fefb5cb3797afcede2add409778fc8'
+         'c7f0328a3026d02534dcb286b98dacf8'
+         '26182f98c9fce274dfec156fa7d49cbd'
          'c98137bda4d8b34f7a7f46a26f83b1f6')

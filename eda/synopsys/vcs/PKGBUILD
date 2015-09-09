@@ -2,7 +2,7 @@
 
 _prodname=vcs-mx
 pkgname=synopsys-$_prodname
-pkgver=J_2014.12_SP3
+pkgver=K_2015.09
 _ftpdir=${_prodname//-/_}_v${pkgver//_/-}
 _ftpname=${_prodname}_v${pkgver//_/-}
 pkgrel=1
@@ -16,7 +16,8 @@ license=('custom')
 makedepends=(synopsys-installer)
 options=(!strip libtool staticlibs emptydirs)
 source=("ftp://ftp.synopsys.com/rev/$_ftpdir/${_ftpname}_common.spf"
-        "ftp://ftp.synopsys.com/rev/$_ftpdir/${_ftpname}_amd64.spf"
+        "ftp://ftp.synopsys.com/rev/$_ftpdir/${_ftpname}_linux64.spf"
+        "ftp://ftp.synopsys.com/rev/$_ftpdir/${_ftpname}_SI32.tar"
         'vcs.sh')
 noextract=(*)
 
@@ -32,6 +33,7 @@ package() {
   install -Dm755 $srcdir/vcs.sh $pkgdir/opt/synopsys/profile.d/vcs.sh
 }
 
-md5sums=('0dfaba0819ecac4555cf1d7ae2abe92a'
-         '9143007d211a727d1707ce841409f0e6'
+md5sums=('987686d3defda0a1bc034dd9d7e35104'
+         '4036e615bb7c8b4dd1267fd3f0515cdf'
+         '347b04f2be9eed4ae21e904fc8795812'
          '7c2764428cc4657431030f060cf10d27')
